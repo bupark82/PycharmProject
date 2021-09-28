@@ -23,7 +23,7 @@ services:
       - MYSECRET_KEY
       - MARIADB_USER
       - MARIADB_PASSWORD
-      -
+
   mariadb:
     image: mariadb:10.5
     networks:
@@ -48,4 +48,10 @@ volumes:
   myvolume_mariadb:
 secrets:
   MYSECRET_KEY:
+    external: true
+  MARIADB_ROOT_PASSWORD:
+    external: true
+  MARIADB_USER:
+    external: true
+  MARIADB_PASSWORD:
     external: true
