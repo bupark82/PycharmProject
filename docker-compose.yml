@@ -1,7 +1,45 @@
 version: "3.7"
 
 services:
-  django:
-    image: myimagegunicorn:1
+  nginx:
+    image: nginx:1.19.5
     ports:
-      - 8080:8000
+      - 80:80
+    networks:
+      - project_mynetwork
+    volumes:
+      - /home/bupark82/nginx.conf:/etc/nginx/nginx.conf
+      - myvolume_static:/data/static/
+      - myvolume_media:/data/media/
+    secrets:
+      - MYSECRET_KEY
+
+  project_mycontainer:
+    image: myimageproject:4
+    networks:
+      - project_mynetwork
+    volumes:
+      - myvolume_static:/home/PycharmProject/staticfiles
+      - myvolume_media:/home/PycharmProject/media/
+
+  mariadb:
+    image: mariadb:10.5
+    networks:
+      - project_mynetwork
+    volumes:
+      - myvolume_mariadb:/var/lib/mysql
+    environment:
+      MARIADB_ROOT_PASSWORD: park6126
+      MARIADB_DATABASE: django
+      MARIADB_USER: django
+      MARIADB_PASSWORD: park6126
+
+networks:
+  project_mynetwork:
+volumes:
+  myvolume_static:
+  myvolume_media:
+  myvolume_mariadb:
+secrets:
+  MYSECRET_KEY:
+    external: true
